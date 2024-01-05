@@ -8,12 +8,16 @@ package main
 
 import (
 	"app/configs"
+	"app/internal/adapter/driven"
+	"app/internal/adapter/driver"
 	"app/internal/infra"
 	"app/internal/service"
 	"app/internal/usecase"
+	"app/internal/usecase/authentication"
 	"app/server"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-playground/validator/v10"
 )
 
 import (
@@ -23,13 +27,16 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(applicationConfig *configs.ApplicationConfig, dbConfig *configs.DBConfig, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(applicationConfig *configs.ApplicationConfig, dbConfig *configs.DBConfig, validate *validator.Validate, logger log.Logger) (*kratos.App, func(), error) {
 	postgresDB, cleanup := infra.NewPostgresDB(dbConfig, logger)
 	greeterRepo := infra.NewGreeterRepo(postgresDB, logger)
 	greeterUsecase := usecase.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase)
 	grpcServer := server.NewGRPCServer(applicationConfig, greeterService, logger)
-	httpServer := server.NewHTTPServer(applicationConfig, greeterService, logger)
+	whatsappStore := driven.NewWhatsappStore(postgresDB)
+	loginUsecase := authentication.NewLoginUsecase(validate, whatsappStore)
+	loginHandler := driver.NewLoginHandler(loginUsecase)
+	httpServer := server.NewHTTPServer(applicationConfig, greeterService, loginHandler, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

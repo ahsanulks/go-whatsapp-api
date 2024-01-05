@@ -3,8 +3,7 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: ""
     version: 0.0.1
 paths:
     /helloworld/{name}:
@@ -26,8 +25,39 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /login:
+        post:
+            tags:
+                - Authentication
+            operationId: Authentication_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.LoginAuthenticationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.LoginAuthenticationResponse'
 components:
     schemas:
+        api.v1.LoginAuthenticationRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+        api.v1.LoginAuthenticationResponse:
+            type: object
+            properties:
+                qrCode:
+                    type: string
+                timeout:
+                    type: integer
+                    format: int32
         helloworld.v1.HelloReply:
             type: object
             properties:
@@ -35,4 +65,6 @@ components:
                     type: string
             description: The response message containing the greetings
 tags:
+    - name: Authentication
     - name: Greeter
+      description: The greeting service definition.

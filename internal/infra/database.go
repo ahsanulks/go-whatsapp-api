@@ -11,6 +11,7 @@ import (
 
 type PostgresDB struct {
 	conn *pgxpool.Pool
+	conf *configs.DBConfig
 }
 
 func NewPostgresDB(c *configs.DBConfig, logger log.Logger) (*PostgresDB, func()) {
@@ -32,9 +33,20 @@ func NewPostgresDB(c *configs.DBConfig, logger log.Logger) (*PostgresDB, func())
 	}
 	return &PostgresDB{
 		conn: conn,
+		conf: c,
 	}, cleanup
 }
 
 func (db *PostgresDB) Conn() *pgxpool.Pool {
 	return db.conn
+}
+
+func (db *PostgresDB) Dsn() string {
+	return fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=disable",
+		db.conf.User,
+		db.conf.Password,
+		db.conf.Hostname,
+		db.conf.Port,
+		db.conf.DB,
+	)
 }

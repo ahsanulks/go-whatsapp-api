@@ -1,6 +1,13 @@
 package usecase
 
-import "github.com/google/wire"
+import (
+	"app/internal/usecase/authentication"
+
+	"github.com/google/wire"
+)
 
 // ProviderSet is usecase providers.
-var ProviderSet = wire.NewSet(NewGreeterUsecase)
+var ProviderSet = wire.NewSet(
+	NewGreeterUsecase,
+	authentication.NewLoginUsecase,
+)

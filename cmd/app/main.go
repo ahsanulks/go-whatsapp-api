@@ -11,6 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/go-playground/validator/v10"
 
 	_ "go.uber.org/automaxprocs"
 )
@@ -52,8 +53,9 @@ func main() {
 	)
 
 	conf := configs.NewConfig()
+	validation := validator.New()
 
-	app, cleanup, err := wireApp(conf, &conf.Postgres, logger)
+	app, cleanup, err := wireApp(conf, &conf.Postgres, validation, logger)
 	if err != nil {
 		panic(err)
 	}
