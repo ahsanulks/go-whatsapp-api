@@ -23,5 +23,5 @@ message LoginAuthenticationRequest {
 
 message LoginAuthenticationResponse {
 	string qrCode = 1;
-	int32 timeout = 2;
+	int64 expiredAt = 2;
 }

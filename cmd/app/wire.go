@@ -35,7 +35,7 @@ func wireApp(*configs.ApplicationConfig, *configs.DBConfig, *validator.Validate,
 			driver.ProviderSet,
 			newApp,
 			wire.Bind(new(usecase.GreeterRepo), new(*infra.GreeterRepo)),
-			wire.Bind(new(portdriven.DeviceProvider), new(*driven.WhatsappStore)),
+			wire.Bind(new(portdriven.DeviceProvider), new(*driven.WhatsmewClient)),
 			wire.Bind(new(portdriver.AuthenticationUsecase), new(*authentication.LoginUsecase)),
 		),
 	)

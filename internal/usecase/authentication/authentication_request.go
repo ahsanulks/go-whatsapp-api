@@ -1,5 +1,5 @@
 package authentication
 
-type LoginParam struct {
+type LoginQRParam struct {
 	ID string `validate:"required"`
 }

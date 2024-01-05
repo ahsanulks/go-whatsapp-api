@@ -6,5 +6,5 @@ import (
 )
 
 type AuthenticationUsecase interface {
-	Login(ctx context.Context, params *authentication.LoginParam) (*authentication.LoginResponse, error)
+	LoginWithQR(ctx context.Context, params *authentication.LoginQRParam) (*authentication.LoginQRResponse, error)
 }

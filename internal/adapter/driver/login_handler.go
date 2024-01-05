@@ -21,7 +21,7 @@ func NewLoginHandler(auth driver.AuthenticationUsecase) *LoginHandler {
 }
 
 func (l *LoginHandler) Login(ctx context.Context, params *v1.LoginAuthenticationRequest) (*v1.LoginAuthenticationResponse, error) {
-	resp, err := l.auth.Login(ctx, &authentication.LoginParam{
+	resp, err := l.auth.LoginWithQR(ctx, &authentication.LoginQRParam{
 		ID: params.Id,
 	})
 	if err != nil {
@@ -29,7 +29,7 @@ func (l *LoginHandler) Login(ctx context.Context, params *v1.LoginAuthentication
 		return nil, err
 	}
 	return &v1.LoginAuthenticationResponse{
-		QrCode:  resp.QrCode,
-		Timeout: int32(resp.Timeout),
+		QrCode:    resp.QrCode,
+		ExpiredAt: resp.ExpiredAt,
 	}, nil
 }

@@ -1,7 +1,10 @@
 package driven
 
-import "go.mau.fi/whatsmeow/store"
+type AuthQRResponse struct {
+	QRCode  string
+	Timeout int64
+}
 
 type DeviceProvider interface {
-	NewDeviceSession() *store.Device
+	NewQRCodeSession(id string) (*AuthQRResponse, error)
 }

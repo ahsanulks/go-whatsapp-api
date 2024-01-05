@@ -1,6 +1,6 @@
 package authentication
 
-type LoginResponse struct {
-	QrCode  string
-	Timeout int
+type LoginQRResponse struct {
+	QrCode    string
+	ExpiredAt int64
 }

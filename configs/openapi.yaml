@@ -55,9 +55,8 @@ components:
             properties:
                 qrCode:
                     type: string
-                timeout:
-                    type: integer
-                    format: int32
+                expiredAt:
+                    type: string
         helloworld.v1.HelloReply:
             type: object
             properties:
