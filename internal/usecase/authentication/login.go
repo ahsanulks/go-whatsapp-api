@@ -29,7 +29,7 @@ func (lu *LoginUsecase) LoginWithQR(ctx context.Context, params *LoginQRParam) (
 		return nil, err
 	}
 
-	resp, err := lu.deviceProvider.NewQRCodeSession(params.ID)
+	resp, err := lu.deviceProvider.NewQRCodeSession(ctx, params.ID)
 	if err != nil {
 		return nil, err
 	}

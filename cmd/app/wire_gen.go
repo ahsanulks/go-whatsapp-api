@@ -8,7 +8,7 @@ package main
 
 import (
 	"app/configs"
-	"app/internal/adapter/driven"
+	"app/internal/adapter/driven/whatsmeow"
 	"app/internal/adapter/driver"
 	"app/internal/infra"
 	"app/internal/service"
@@ -33,8 +33,8 @@ func wireApp(applicationConfig *configs.ApplicationConfig, dbConfig *configs.DBC
 	greeterUsecase := usecase.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase)
 	grpcServer := server.NewGRPCServer(applicationConfig, greeterService, logger)
-	whatsmewClient := driven.NewWhatsmewClient(postgresDB)
-	loginUsecase := authentication.NewLoginUsecase(validate, whatsmewClient)
+	whatsmeowClient := whatsmeowclient.NewWhatsmeowClient(postgresDB)
+	loginUsecase := authentication.NewLoginUsecase(validate, whatsmeowClient)
 	loginHandler := driver.NewLoginHandler(loginUsecase)
 	httpServer := server.NewHTTPServer(applicationConfig, greeterService, loginHandler, logger)
 	app := newApp(logger, grpcServer, httpServer)

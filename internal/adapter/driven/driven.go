@@ -1,5 +1,9 @@
 package driven
 
-import "github.com/google/wire"
+import (
+	whatsmeowclient "app/internal/adapter/driven/whatsmeow"
 
-var ProviderSet = wire.NewSet(NewWhatsmewClient)
+	"github.com/google/wire"
+)
+
+var ProviderSet = wire.NewSet(whatsmeowclient.NewWhatsmeowClient)
