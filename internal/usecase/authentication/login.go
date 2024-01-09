@@ -8,8 +8,6 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// var globalChannel []
-
 type LoginUsecase struct {
 	validator *validator.Validate
 
