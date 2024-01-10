@@ -14,7 +14,6 @@ import (
 	"app/internal/infra"
 	portdriven "app/internal/port/driven"
 	portdriver "app/internal/port/driver"
-	"app/internal/service"
 	"app/internal/usecase"
 	"app/internal/usecase/authentication"
 	"app/internal/usecase/message"
@@ -33,11 +32,9 @@ func wireApp(*configs.ApplicationConfig, *configs.DBConfig, *validator.Validate,
 			server.ProviderSet,
 			infra.ProviderSet,
 			usecase.ProviderSet,
-			service.ProviderSet,
 			driven.ProviderSet,
 			driver.ProviderSet,
 			newApp,
-			wire.Bind(new(usecase.GreeterRepo), new(*infra.GreeterRepo)),
 			wire.Bind(new(portdriven.DeviceProvider), new(*whatsmeowclient.WhatsmeowClient)),
 			wire.Bind(new(portdriver.AuthenticationUsecase), new(*authentication.LoginUsecase)),
 			wire.Bind(new(portdriver.MessageUsecase), new(*message.MessageUsecase)),

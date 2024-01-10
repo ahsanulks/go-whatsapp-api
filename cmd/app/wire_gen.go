@@ -12,8 +12,6 @@ import (
 	"app/internal/adapter/driven/whatsmeow"
 	"app/internal/adapter/driver"
 	"app/internal/infra"
-	"app/internal/service"
-	"app/internal/usecase"
 	"app/internal/usecase/authentication"
 	"app/internal/usecase/message"
 	"app/server"
@@ -30,11 +28,8 @@ import (
 
 // wireApp init kratos application.
 func wireApp(applicationConfig *configs.ApplicationConfig, dbConfig *configs.DBConfig, validate *validator.Validate, logger log.Logger) (*kratos.App, func(), error) {
+	grpcServer := server.NewGRPCServer(applicationConfig, logger)
 	postgresDB, cleanup := infra.NewPostgresDB(dbConfig, logger)
-	greeterRepo := infra.NewGreeterRepo(postgresDB, logger)
-	greeterUsecase := usecase.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(applicationConfig, greeterService, logger)
 	whatsmeowClient := whatsmeowclient.NewWhatsmeowClient(postgresDB)
 	loginUsecase := authentication.NewLoginUsecase(validate, whatsmeowClient)
 	loginHandler := driver.NewLoginHandler(loginUsecase)

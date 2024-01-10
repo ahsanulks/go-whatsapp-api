@@ -9,7 +9,6 @@ import (
 
 // ProviderSet is usecase providers.
 var ProviderSet = wire.NewSet(
-	NewGreeterUsecase,
 	authentication.NewLoginUsecase,
 	message.NewMessageUsecase,
 )
