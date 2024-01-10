@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "app/api/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.v1";
+
+service Message {
+	rpc SendMessage (SendMessageRequest) returns (SendMessageResponse) {
+		option (google.api.http) = {
+			post: "/message"
+			body: "*"
+		};
+	};
+}
+
+message SendMessageRequest {
+	string id = 1;
+	string phone = 2;
+	repeated string receiverPhones = 3;
+	string message = 4;
+}
+message SendMessageResponse {
+	string message = 1;
+}

@@ -43,6 +43,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.LoginAuthenticationResponse'
+    /message:
+        post:
+            tags:
+                - Message
+            operationId: Message_SendMessage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.SendMessageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.SendMessageResponse'
 components:
     schemas:
         api.v1.LoginAuthenticationRequest:
@@ -57,6 +75,24 @@ components:
                     type: string
                 expiredAt:
                     type: string
+        api.v1.SendMessageRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                phone:
+                    type: string
+                receiverPhones:
+                    type: array
+                    items:
+                        type: string
+                message:
+                    type: string
+        api.v1.SendMessageResponse:
+            type: object
+            properties:
+                message:
+                    type: string
         helloworld.v1.HelloReply:
             type: object
             properties:
@@ -67,3 +103,4 @@ tags:
     - name: Authentication
     - name: Greeter
       description: The greeting service definition.
+    - name: Message

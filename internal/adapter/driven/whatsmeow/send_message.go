@@ -21,7 +21,8 @@ func (ws *WhatsmeowClient) SendMessage(ctx context.Context, params *driven.Messa
 	for _, resp := range responses {
 		if resp.IsIn {
 			// TODO: add delay on each message to prevent blocking
-			_, err = session.SendMessage(ctx, resp.JID, &waproto.Message{
+			// use new context since it will breaking using existing context
+			_, err = session.SendMessage(context.Background(), resp.JID, &waproto.Message{
 				Conversation: proto.String(params.Message),
 			}, whatsmeow.SendRequestExtra{
 				ID: session.GenerateMessageID(),

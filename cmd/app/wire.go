@@ -8,6 +8,7 @@ package main
 import (
 	"app/configs"
 	"app/internal/adapter/driven"
+	userrepository "app/internal/adapter/driven/user_repository"
 	whatsmeowclient "app/internal/adapter/driven/whatsmeow"
 	"app/internal/adapter/driver"
 	"app/internal/infra"
@@ -16,6 +17,7 @@ import (
 	"app/internal/service"
 	"app/internal/usecase"
 	"app/internal/usecase/authentication"
+	"app/internal/usecase/message"
 	"app/server"
 
 	"github.com/go-kratos/kratos/v2"
@@ -38,6 +40,9 @@ func wireApp(*configs.ApplicationConfig, *configs.DBConfig, *validator.Validate,
 			wire.Bind(new(usecase.GreeterRepo), new(*infra.GreeterRepo)),
 			wire.Bind(new(portdriven.DeviceProvider), new(*whatsmeowclient.WhatsmeowClient)),
 			wire.Bind(new(portdriver.AuthenticationUsecase), new(*authentication.LoginUsecase)),
+			wire.Bind(new(portdriver.MessageUsecase), new(*message.MessageUsecase)),
+			wire.Bind(new(portdriven.PhoneChecker), new(*userrepository.UserRepository)),
+			wire.Bind(new(portdriven.MessageSender), new(*whatsmeowclient.WhatsmeowClient)),
 		),
 	)
 }

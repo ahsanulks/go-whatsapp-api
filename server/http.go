@@ -1,11 +1,9 @@
 package server
 
 import (
-	v1 "app/api/helloworld/v1"
 	v1Api "app/api/v1"
 	"app/configs"
 	"app/internal/adapter/driver"
-	"app/internal/service"
 	"embed"
 	"io/fs"
 	nethttp "net/http"
@@ -23,7 +21,7 @@ import (
 var content embed.FS
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *configs.ApplicationConfig, greeter *service.GreeterService, auth *driver.LoginHandler, logger log.Logger) *http.Server {
+func NewHTTPServer(c *configs.ApplicationConfig, auth *driver.LoginHandler, message *driver.MessageHandler, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -35,11 +33,11 @@ func NewHTTPServer(c *configs.ApplicationConfig, greeter *service.GreeterService
 		opts = append(opts, http.Address(c.Server.HTTP.Addr))
 	}
 	if c.Server.HTTP.Timeout != 0 {
-		opts = append(opts, http.Timeout(time.Duration(c.Server.HTTP.Timeout)))
+		opts = append(opts, http.Timeout(time.Duration(c.Server.HTTP.Timeout)*time.Second))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterGreeterHTTPServer(srv, greeter)
 	v1Api.RegisterAuthenticationHTTPServer(srv, auth)
+	v1Api.RegisterMessageHTTPServer(srv, message)
 	openAPIhandler := handleSwaggerUI(configs.OpenAPI)
 	srv.HandlePrefix("/q/", openAPIhandler)
 	return srv

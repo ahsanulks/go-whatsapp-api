@@ -8,12 +8,14 @@ package main
 
 import (
 	"app/configs"
+	"app/internal/adapter/driven/user_repository"
 	"app/internal/adapter/driven/whatsmeow"
 	"app/internal/adapter/driver"
 	"app/internal/infra"
 	"app/internal/service"
 	"app/internal/usecase"
 	"app/internal/usecase/authentication"
+	"app/internal/usecase/message"
 	"app/server"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -36,7 +38,10 @@ func wireApp(applicationConfig *configs.ApplicationConfig, dbConfig *configs.DBC
 	whatsmeowClient := whatsmeowclient.NewWhatsmeowClient(postgresDB)
 	loginUsecase := authentication.NewLoginUsecase(validate, whatsmeowClient)
 	loginHandler := driver.NewLoginHandler(loginUsecase)
-	httpServer := server.NewHTTPServer(applicationConfig, greeterService, loginHandler, logger)
+	userRepository := userrepository.NewUserRepository(postgresDB)
+	messageUsecase := message.NewMessageUsecase(validate, whatsmeowClient, userRepository)
+	messageHandler := driver.NewMessageHandler(messageUsecase)
+	httpServer := server.NewHTTPServer(applicationConfig, loginHandler, messageHandler, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
