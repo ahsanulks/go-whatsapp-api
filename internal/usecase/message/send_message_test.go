@@ -7,6 +7,12 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+type fakePhoneChecker struct{}
+
+func (fpc fakePhoneChecker) IsPhoneValid(ctx context.Context, id, phone string) bool {
+	return phone != "error"
+}
+
 func TestMessageSender_SendMessage(t *testing.T) {
 	type fields struct {
 		validator *validator.Validate
@@ -113,7 +119,25 @@ func TestMessageSender_SendMessage(t *testing.T) {
 					ReceiverPhone: []string{"1231231451"},
 					Message:       "testing message",
 					Sender: &Sender{
-						Phone: "123131",
+						Phone: "error",
+						ID:    "testid",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "when error sending message should return error",
+			fields: fields{
+				validator: validator.New(),
+			},
+			args: args{
+				ctx: context.Background(),
+				request: &SendMessageRequest{
+					ReceiverPhone: []string{"1231231451"},
+					Message:       "testing message",
+					Sender: &Sender{
+						Phone: "6282131111",
 						ID:    "testid",
 					},
 				},
@@ -123,8 +147,9 @@ func TestMessageSender_SendMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ms := &MessageSender{
-				validator: tt.fields.validator,
+			ms := &MessageUsecase{
+				validator:    tt.fields.validator,
+				phoneChecker: new(fakePhoneChecker),
 			}
 			if err := ms.SendMessage(tt.args.ctx, tt.args.request); (err != nil) != tt.wantErr {
 				t.Errorf("MessageSender.SendMessage() error = %v, wantErr %v", err, tt.wantErr)

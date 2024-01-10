@@ -1,25 +1,40 @@
 package message
 
 import (
+	"app/internal/port/driven"
 	"context"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
 )
 
-type MessageSender struct {
-	validator *validator.Validate
+type MessageUsecase struct {
+	validator     *validator.Validate
+	messageSender driven.MessageSender
+	phoneChecker  driven.PhoneChecker
 }
 
-func NewMessageSender(validator *validator.Validate) *MessageSender {
-	return &MessageSender{
-		validator: validator,
+func NewMessageUsecase(
+	validator *validator.Validate,
+	messageSender driven.MessageSender,
+	phoneCheker driven.PhoneChecker,
+) *MessageUsecase {
+	return &MessageUsecase{
+		validator:     validator,
+		messageSender: messageSender,
+		phoneChecker:  phoneCheker,
 	}
 }
 
-func (ms *MessageSender) SendMessage(ctx context.Context, request *SendMessageRequest) error {
+func (ms *MessageUsecase) SendMessage(ctx context.Context, request *SendMessageRequest) error {
 	err := ms.validator.Struct(request)
 	if err != nil {
 		return err
+	}
+
+	isValid := ms.phoneChecker.IsPhoneValid(ctx, request.Sender.ID, request.Sender.Phone)
+	if !isValid {
+		return errors.New("invalid phone sender/id")
 	}
 	return nil
 }
