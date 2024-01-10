@@ -12,9 +12,9 @@ import (
 // TODO: send message need to call by background service
 // because it's possible to send into multiple receiver
 // we need to add delay on each message to prevent blocking mechanism from whatsapp
-func (ws *WhatsmeowClient) SendMessage(ctx context.Context, params *driven.SendMessageRequest) error {
-	session := ws.session[""]
-	responses, err := session.IsOnWhatsApp(params.ReceiverPhone)
+func (ws *WhatsmeowClient) SendMessage(ctx context.Context, params *driven.MessageParam) error {
+	session := ws.session[params.Sender]
+	responses, err := session.IsOnWhatsApp(params.ReceiverNumbers)
 	if err != nil {
 		return err
 	}

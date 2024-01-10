@@ -1,7 +1,9 @@
 package message
 
 import (
+	"app/internal/port/driven"
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
@@ -11,6 +13,15 @@ type fakePhoneChecker struct{}
 
 func (fpc fakePhoneChecker) IsPhoneValid(ctx context.Context, id, phone string) bool {
 	return phone != "error"
+}
+
+type fakeMessageSender struct{}
+
+func (fms fakeMessageSender) SendMessage(ctx context.Context, param *driven.MessageParam) error {
+	if param.Sender == "123131321" {
+		return errors.New("error")
+	}
+	return nil
 }
 
 func TestMessageSender_SendMessage(t *testing.T) {
@@ -137,19 +148,38 @@ func TestMessageSender_SendMessage(t *testing.T) {
 					ReceiverPhone: []string{"1231231451"},
 					Message:       "testing message",
 					Sender: &Sender{
-						Phone: "6282131111",
+						Phone: "123131321",
 						ID:    "testid",
 					},
 				},
 			},
 			wantErr: true,
 		},
+		{
+			name: "success",
+			fields: fields{
+				validator: validator.New(),
+			},
+			args: args{
+				ctx: context.Background(),
+				request: &SendMessageRequest{
+					ReceiverPhone: []string{"1231231451"},
+					Message:       "testing message",
+					Sender: &Sender{
+						Phone: "627123131213",
+						ID:    "testid",
+					},
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ms := &MessageUsecase{
-				validator:    tt.fields.validator,
-				phoneChecker: new(fakePhoneChecker),
+				validator:     tt.fields.validator,
+				phoneChecker:  new(fakePhoneChecker),
+				messageSender: new(fakeMessageSender),
 			}
 			if err := ms.SendMessage(tt.args.ctx, tt.args.request); (err != nil) != tt.wantErr {
 				t.Errorf("MessageSender.SendMessage() error = %v, wantErr %v", err, tt.wantErr)

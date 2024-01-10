@@ -36,5 +36,9 @@ func (ms *MessageUsecase) SendMessage(ctx context.Context, request *SendMessageR
 	if !isValid {
 		return errors.New("invalid phone sender/id")
 	}
-	return nil
+	return ms.messageSender.SendMessage(ctx, &driven.MessageParam{
+		ReceiverNumbers: request.ReceiverPhone,
+		Message:         request.Message,
+		Sender:          request.Sender.Phone,
+	})
 }
