@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"app/internal/usecase/authentication"
+	"app/internal/usecase/message"
 
 	"github.com/google/wire"
 )
@@ -10,4 +11,5 @@ import (
 var ProviderSet = wire.NewSet(
 	NewGreeterUsecase,
 	authentication.NewLoginUsecase,
+	message.NewMessageUsecase,
 )

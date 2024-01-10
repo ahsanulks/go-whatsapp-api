@@ -79,8 +79,8 @@ func (ws *WhatsmeowClient) whatsAppGenerateQR(params *qrCodeReceiverParams) (str
 func (ws *WhatsmeowClient) creatMappingUser(userID string, jid *types.JID) error {
 	_, err := ws.db.Conn().Exec(context.Background(), `
 		INSERT INTO
-			user_whatsmeow_map (user_id, jid)
-		VALUES ($1, $2)
-	`, userID, jid.String())
+			user_whatsmeow_map (user_id, phone, jid)
+		VALUES ($1, $2, $3)
+	`, userID, jid.User, jid.String())
 	return err
 }

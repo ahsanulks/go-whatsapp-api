@@ -3,6 +3,7 @@ module app
 go 1.19
 
 require (
+	github.com/go-faker/faker/v4 v4.2.0
 	github.com/go-kratos/kratos/v2 v2.7.0
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/google/wire v0.5.0
@@ -10,6 +11,7 @@ require (
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.18.2
+	github.com/stretchr/testify v1.8.4
 	go.mau.fi/whatsmeow v0.0.0-20231216213200-9d803dd92735
 	go.uber.org/automaxprocs v1.5.1
 	golang.org/x/sync v0.5.0
@@ -23,7 +25,6 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
-	github.com/go-faker/faker/v4 v4.2.0 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -48,7 +49,6 @@ require (
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.mau.fi/libsignal v0.1.0 // indirect
 	go.mau.fi/util v0.2.0 // indirect
