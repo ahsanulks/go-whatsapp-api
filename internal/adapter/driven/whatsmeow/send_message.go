@@ -3,9 +3,11 @@ package whatsmeowclient
 import (
 	"app/internal/port/driven"
 	"context"
+	"time"
 
 	"go.mau.fi/whatsmeow"
 	waproto "go.mau.fi/whatsmeow/binary/proto"
+	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -22,6 +24,9 @@ func (ws *WhatsmeowClient) SendMessage(ctx context.Context, params *driven.Messa
 		if resp.IsIn {
 			// TODO: add delay on each message to prevent blocking
 			// use new context since it will breaking using existing context
+			// please refer to banned reason
+			time.Sleep(2 * time.Second)
+			_ = session.SendChatPresence(resp.JID, types.ChatPresenceComposing, types.ChatPresenceMediaText)
 			_, err = session.SendMessage(context.Background(), resp.JID, &waproto.Message{
 				Conversation: proto.String(params.Message),
 			}, whatsmeow.SendRequestExtra{

@@ -19,6 +19,12 @@ type WhatsmeowClient struct {
 	session   map[string]*whatsmeow.Client
 }
 
+// NOTE: PLEASE REFER BANNED REASON WHEN USING THIS
+// "too many people blocked you",
+// "you sent too many messages to people who don't have you in their address books"
+// "you created too many groups with people who don't have you in their address books"
+// "you sent the same message to too many people"
+// "you sent too many messages to a broadcast list"
 func NewWhatsmeowClient(db *infra.PostgresDB) *WhatsmeowClient {
 	store.DeviceProps.Os = proto.String("go-api")
 	store.DeviceProps.PlatformType = waproto.DeviceProps_CHROME.Enum()
